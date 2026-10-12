@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64b58f48733542b5a981c95ceab6032e, type: 3}
+  m_Name: JourneyContentCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::InteractiveCareerJourney.JourneyContentCatalog
+  middleSchoolQuestion: Hey, you seem a smart kid! Do you wanna learn Computer Science?
+  middleSchoolAnswer: Why not?
+  middleSchoolReplyButton: Reply
+  continueButton: Continue
+  yearsLaterCaption: 5 YEARS LATER
+  yearsLaterDuration: 3
+  highSchoolReflection: WOW! I really enjoyed Computer Science! Now I can program
+    in C++, C and C#, and I also know how to design and implement a database! I also
+    have the basics of systems and networking! This is fantastic!
+  universityTitle: UNICT Informatica Triennale
+  mockContentNotice: "SAMPLE CONTENT \u2014 Replace these demo subjects and projects
+    with your own."
+  subjects:
+  - title: Programming Fundamentals
+    description: 'Demo description: variables, control flow, functions, and problem
+      decomposition.'
+    projects: []
+  - title: Algorithms and Data Structures
+    description: 'Demo description: sorting, searching, complexity, lists, trees,
+      and graphs.'
+    projects:
+    - title: Route Planner (DEMO)
+      description: 'Mock project: compute a route through a small graph and compare
+        traversal strategies.'
+      technologies: "C# \xB7 Graphs"
+  - title: Mathematical Analysis
+    description: 'Demo description: limits, derivatives, integrals, and mathematical
+      reasoning.'
+    projects: []
+  - title: Linear Algebra and Geometry
+    description: 'Demo description: vectors, matrices, linear transformations, and
+      geometry.'
+    projects: []
+  - title: Computer Architecture
+    description: 'Demo description: processor organization, memory hierarchy, and
+      machine-level representation.'
+    projects: []
+  - title: Operating Systems
+    description: 'Demo description: processes, threads, synchronization, memory,
+      and file systems.'
+    projects: []
+  - title: Database Systems
+    description: 'Demo description: relational modelling, SQL, normalization, and
+      transactions.'
+    projects:
+    - title: Campus Library Database (DEMO)
+      description: 'Mock project: design a relational database for books, loans,
+        members, and reservations.'
+      technologies: "SQL \xB7 ER modelling"
+  - title: Software Engineering
+    description: 'Demo description: requirements, architecture, testing, version
+      control, and teamwork.'
+    projects:
+    - title: Team Task Manager (DEMO)
+      description: 'Mock project: a small application for organizing tasks, users,
+        and project milestones.'
+      technologies: "C# \xB7 UML \xB7 Git"
+  - title: Computer Networks
+    description: 'Demo description: network layers, addressing, routing, and client-server
+      communication.'
+    projects:
+    - title: Client-Server Chat (DEMO)
+      description: 'Mock project: exchange text messages between a simple client
+        and server.'
+      technologies: "Sockets \xB7 TCP"
+  - title: Web Technologies
+    description: 'Demo description: build accessible web experiences with client
+      and server technologies.'
+    projects:
+    - title: Student Services Portal (DEMO)
+      description: 'Mock project: a sample portal with course pages and a student
+        dashboard.'
+      technologies: "HTML \xB7 CSS \xB7 JavaScript"
+  - title: Programming Languages
+    description: 'Demo description: language paradigms, interpreters, compilers,
+      and type systems.'
+    projects: []
+  - title: Artificial Intelligence
+    description: 'Demo description: search, planning, knowledge representation, and
+      intelligent agents.'
+    projects:
+    - title: Maze Search Agent (DEMO)
+      description: 'Mock project: compare search strategies for navigating a generated
+        maze.'
+      technologies: "C# \xB7 Search algorithms"
+  - title: Computer Graphics and Game Development
+    description: 'Demo description: rendering concepts, interaction, and real-time
+      game systems.'
+    projects:
+    - title: 2D Platform Game (DEMO)
+      description: 'Mock project: a small platform game with movement, levels, and
+        collectible objects.'
+      technologies: "Unity \xB7 C#"
+  - title: Machine Learning
+    description: 'Demo description: prepare data, train models, and evaluate predictive
+      performance.'
+    projects:
+    - title: Image Classifier (DEMO)
+      description: 'Mock project: train and evaluate a basic classifier on a sample
+        image dataset.'
+      technologies: "Python \xB7 ML"
+  - title: Final Project
+    description: 'Demo entry: replace this with the real title and description of
+      your university final project.'
+    projects: []

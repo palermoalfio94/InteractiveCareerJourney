@@ -56,6 +56,14 @@ I punti d’interesse devono supportare evidenziazione al passaggio del mouse, e
 
 Le schede possono contenere titolo, data, descrizione breve, tecnologie, competenze, immagini/video, repository, pubblicazioni, link esterni e CV scaricabile quando pertinente. I link devono essere facili da individuare e aprire.
 
+### Tappa universitaria — prototipo
+
+- L’edificio **UNICT Informatica Triennale** è cliccabile e apre un pannello con l’elenco dei corsi.
+- Il prototipo parte con circa 15 corsi e alcuni progetti di esempio, esplicitamente marcati come contenuti dimostrativi da sostituire.
+- Selezionando un corso si leggono descrizione e, quando presenti, progetti associati.
+- Dialoghi, didascalie, durata della transizione temporale, corsi e progetti si modificano nell’asset Unity `JourneyContentCatalog` tramite Inspector, senza intervenire sulla logica della scena.
+- Il generatore crea l’asset di contenuto solo se non esiste; le successive rigenerazioni della scena non devono cancellare le modifiche ai testi e ai corsi.
+
 ## Direzione artistica e prestazioni
 
 - Look stilizzato, low-poly, pulito e coerente, simile a un piccolo diorama.

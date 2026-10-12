@@ -6,6 +6,7 @@ namespace InteractiveCareerJourney
     public sealed class JourneyPrototypeHud : MonoBehaviour
     {
         [SerializeField] private CharacterJourneyMotor character;
+        [SerializeField] private JourneyDialogueSequence dialogueSequence;
 
         private GUIStyle panelStyle;
         private GUIStyle titleStyle;
@@ -24,19 +25,19 @@ namespace InteractiveCareerJourney
             Rect panel = new Rect(18f, 18f, panelWidth, panelHeight);
             GUI.Box(panel, GUIContent.none, panelStyle);
             GUI.Label(new Rect(panel.x + 18f, panel.y + 12f, panelWidth - 36f, 25f),
-                "IL VIAGGIO DI ALFIO", titleStyle);
+                "ALFIO'S JOURNEY", titleStyle);
 
             string status = character.IsPaused
-                ? "In pausa"
+                ? "Paused"
                 : character.IsWalking
-                    ? "In cammino verso la scuola"
-                    : "Prima tappa raggiunta";
+                    ? "Walking"
+                    : "Milestone reached";
             GUI.Label(new Rect(panel.x + 18f, panel.y + 41f, panelWidth - 36f, 22f), status, statusStyle);
 
             float buttonY = panel.y + 70f;
             float buttonWidth = 152f;
             if (GUI.Button(new Rect(panel.x + 18f, buttonY, buttonWidth, 30f),
-                    character.IsPaused ? "Riprendi" : "Pausa", buttonStyle))
+                    character.IsPaused ? "Resume" : "Pause", buttonStyle))
             {
                 if (character.IsPaused)
                     character.Resume();
@@ -44,8 +45,13 @@ namespace InteractiveCareerJourney
                     character.Pause();
             }
 
-            if (GUI.Button(new Rect(panel.x + 186f, buttonY, buttonWidth, 30f), "Ricomincia", buttonStyle))
-                character.RestartJourney();
+            if (GUI.Button(new Rect(panel.x + 186f, buttonY, buttonWidth, 30f), "Restart", buttonStyle))
+            {
+                if (dialogueSequence != null)
+                    dialogueSequence.RestartSequence();
+                else
+                    character.RestartJourney();
+            }
         }
 
         private void EnsureStyles()

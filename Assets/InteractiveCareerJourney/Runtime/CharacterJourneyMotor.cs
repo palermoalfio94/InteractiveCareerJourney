@@ -12,6 +12,7 @@ namespace InteractiveCareerJourney
         [SerializeField] private float gaitAngle = 22f;
 
         private float startAtX;
+        private float firstStopAtX;
         private bool isPaused;
         private bool isWalking;
 
@@ -19,9 +20,17 @@ namespace InteractiveCareerJourney
         public bool IsWalking => isWalking && !isPaused;
         public bool HasReachedMilestone => transform.position.x >= stopAtX - 0.01f;
 
+        public void SetNextMilestone(float positionX)
+        {
+            stopAtX = positionX;
+            isPaused = false;
+            isWalking = !HasReachedMilestone;
+        }
+
         private void Start()
         {
             startAtX = transform.position.x;
+            firstStopAtX = stopAtX;
             isWalking = true;
         }
 
@@ -64,6 +73,7 @@ namespace InteractiveCareerJourney
             Vector3 position = transform.position;
             position.x = startAtX;
             transform.position = position;
+            stopAtX = firstStopAtX;
             isPaused = false;
             isWalking = true;
         }
