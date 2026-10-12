@@ -14,6 +14,64 @@ namespace InteractiveCareerJourneyEditor
         private const string MaterialFolder = "Assets/InteractiveCareerJourney/Materials";
         private const string CatalogPath = "Assets/InteractiveCareerJourney/Data/JourneyContentCatalog.asset";
 
+        [MenuItem("Tools/Interactive Career Journey/Add Study and Work Sequence to Open Scene")]
+        public static void AddStudyAndWorkSequenceToOpenScene()
+        {
+            CharacterJourneyMotor motor = Object.FindFirstObjectByType<CharacterJourneyMotor>();
+            JourneyCameraFollow cameraFollow = Object.FindFirstObjectByType<JourneyCameraFollow>();
+            JourneyDialogueSequence dialogue = Object.FindFirstObjectByType<JourneyDialogueSequence>();
+            UniversityCourseMenu universityMenu = Object.FindFirstObjectByType<UniversityCourseMenu>();
+            if (motor == null || cameraFollow == null || dialogue == null)
+            {
+                EditorUtility.DisplayDialog("Cannot configure scene", "Open JourneyPrototype and ensure it contains Alfio, the journey camera, and the dialogue sequence.", "OK");
+                return;
+            }
+
+            GameObject company = null;
+            GameObject[] sceneObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            foreach (GameObject candidate in sceneObjects)
+            {
+                if (candidate.name != "eyePlus Tecnowork" || candidate.scene != SceneManager.GetActiveScene())
+                    continue;
+                if (company == null)
+                    company = candidate;
+                else
+                    Object.DestroyImmediate(candidate);
+            }
+            if (company == null)
+                company = CreateCompanyBuilding();
+            company.transform.position = new Vector3(47f, 0f, 11f);
+            company.SetActive(false);
+            if (company.transform.Find("eyePlus Branch Path") == null)
+            {
+                GameObject branchPath = CreatePrimitive("eyePlus Branch Path", PrimitiveType.Cube,
+                    new Vector3(47f, 0.02f, 6f), new Vector3(2.4f, 0.08f, 9.5f), "Path");
+                branchPath.transform.SetParent(company.transform, true);
+            }
+
+            ParallelStudyWorkSequence sequence = Object.FindFirstObjectByType<ParallelStudyWorkSequence>();
+            if (sequence == null)
+                sequence = new GameObject("Parallel Study and Work Sequence").AddComponent<ParallelStudyWorkSequence>();
+            JourneyContentCatalog catalog = AssetDatabase.LoadAssetAtPath<JourneyContentCatalog>(CatalogPath);
+            SerializedObject serialized = new SerializedObject(sequence);
+            serialized.FindProperty("universityAlfio").objectReferenceValue = motor;
+            serialized.FindProperty("cameraFollow").objectReferenceValue = cameraFollow;
+            serialized.FindProperty("universityMenu").objectReferenceValue = universityMenu;
+            serialized.FindProperty("companyBuilding").objectReferenceValue = company;
+            serialized.FindProperty("contentCatalog").objectReferenceValue = catalog;
+            serialized.FindProperty("companyStopPosition").vector3Value = new Vector3(47f, 0.9f, 8.2f);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+
+            SerializedObject serializedDialogue = new SerializedObject(dialogue);
+            serializedDialogue.FindProperty("contentCatalog").objectReferenceValue = catalog;
+            serializedDialogue.FindProperty("parallelSequence").objectReferenceValue = sequence;
+            serializedDialogue.ApplyModifiedPropertiesWithoutUndo();
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
+            if (!Application.isBatchMode)
+                EditorUtility.DisplayDialog("Sequence added", "The study/work vignette is configured. Press Play and continue the journey to the university.", "OK");
+        }
+
         [MenuItem("Tools/Interactive Career Journey/Create Prototype Scene")]
         public static void CreatePrototypeScene()
         {
@@ -37,13 +95,24 @@ namespace InteractiveCareerJourneyEditor
             GameObject character = CreateCharacter();
             GameObject mentor = CreateComputerScienceMentor();
             CreateHighSchool();
-            CreateUniversity(catalog, character.GetComponent<CharacterJourneyMotor>());
-            CreateCamera(character.transform);
+            UniversityCourseMenu universityMenu = CreateUniversity(catalog, character.GetComponent<CharacterJourneyMotor>());
+            JourneyCameraFollow cameraFollow = CreateCamera(character.transform);
+            GameObject company = CreateCompanyBuilding();
+            company.SetActive(false);
+            ParallelStudyWorkSequence parallelSequence = new GameObject("Parallel Study and Work Sequence").AddComponent<ParallelStudyWorkSequence>();
+            SerializedObject serializedParallel = new SerializedObject(parallelSequence);
+            serializedParallel.FindProperty("universityAlfio").objectReferenceValue = character.GetComponent<CharacterJourneyMotor>();
+            serializedParallel.FindProperty("cameraFollow").objectReferenceValue = cameraFollow;
+            serializedParallel.FindProperty("universityMenu").objectReferenceValue = universityMenu;
+            serializedParallel.FindProperty("companyBuilding").objectReferenceValue = company;
+            serializedParallel.FindProperty("contentCatalog").objectReferenceValue = catalog;
+            serializedParallel.ApplyModifiedPropertiesWithoutUndo();
             JourneyDialogueSequence dialogue = new GameObject("Journey Dialogue Sequence").AddComponent<JourneyDialogueSequence>();
             SerializedObject serializedDialogue = new SerializedObject(dialogue);
             serializedDialogue.FindProperty("alfio").objectReferenceValue = character.GetComponent<CharacterJourneyMotor>();
             serializedDialogue.FindProperty("mentor").objectReferenceValue = mentor;
             serializedDialogue.FindProperty("contentCatalog").objectReferenceValue = catalog;
+            serializedDialogue.FindProperty("parallelSequence").objectReferenceValue = parallelSequence;
             serializedDialogue.FindProperty("universityStopX").floatValue = 47f;
             serializedDialogue.ApplyModifiedPropertiesWithoutUndo();
             CreateHud(character.GetComponent<CharacterJourneyMotor>(), dialogue);
@@ -168,7 +237,7 @@ namespace InteractiveCareerJourneyEditor
                 new Vector3(2.4f, 0.08f, 2.2f), "Path");
         }
 
-        private static void CreateUniversity(JourneyContentCatalog catalog, CharacterJourneyMotor motor)
+        private static UniversityCourseMenu CreateUniversity(JourneyContentCatalog catalog, CharacterJourneyMotor motor)
         {
             GameObject university = new GameObject("UNICT Informatica Triennale - Click to Explore");
             university.transform.position = new Vector3(55f, 0f, 0f);
@@ -216,6 +285,46 @@ namespace InteractiveCareerJourneyEditor
             serializedMenu.FindProperty("catalog").objectReferenceValue = catalog;
             serializedMenu.FindProperty("journeyMotor").objectReferenceValue = motor;
             serializedMenu.ApplyModifiedPropertiesWithoutUndo();
+            return courseMenu;
+        }
+
+        private static GameObject CreateCompanyBuilding()
+        {
+            GameObject company = new GameObject("eyePlus Tecnowork");
+            company.transform.position = new Vector3(47f, 0f, 11f);
+            CreatePrimitive("eyePlus Branch Path", PrimitiveType.Cube, new Vector3(47f, 0.02f, 6f),
+                new Vector3(2.4f, 0.08f, 9.5f), "Path").transform.SetParent(company.transform, true);
+            CreatePrimitive("eyePlus Office", PrimitiveType.Cube, new Vector3(47f, 1.65f, 11f),
+                new Vector3(6.2f, 3.3f, 2.4f), "Cream").transform.SetParent(company.transform, true);
+            CreatePrimitive("eyePlus Office Roof", PrimitiveType.Cube, new Vector3(47f, 3.38f, 11f),
+                new Vector3(6.5f, 0.24f, 2.7f), "Roof").transform.SetParent(company.transform, true);
+            for (int i = 0; i < 3; i++)
+                CreatePrimitive($"eyePlus Window {i + 1}", PrimitiveType.Cube,
+                    new Vector3(45.1f + i * 1.9f, 2f, 9.75f), new Vector3(1.05f, 0.95f, 0.12f), "Window")
+                    .transform.SetParent(company.transform, true);
+
+            GameObject sign = new GameObject("eyePlus Tecnowork Sign");
+            sign.transform.SetParent(company.transform, false);
+            sign.transform.localPosition = new Vector3(0f, 4.15f, -0.95f);
+            TextMesh label = sign.AddComponent<TextMesh>();
+            label.text = "eyePlus Tecnowork";
+            label.anchor = TextAnchor.MiddleCenter;
+            label.alignment = TextAlignment.Center;
+            label.characterSize = 0.32f;
+            label.fontSize = 48;
+            label.color = new Color(0.12f, 0.22f, 0.28f);
+
+            GameObject roleSign = new GameObject("Game Programmer Sign");
+            roleSign.transform.SetParent(company.transform, false);
+            roleSign.transform.localPosition = new Vector3(0f, 0.2f, -4.4f);
+            TextMesh roleText = roleSign.AddComponent<TextMesh>();
+            roleText.text = "GAME PROGRAMMER";
+            roleText.anchor = TextAnchor.MiddleCenter;
+            roleText.alignment = TextAlignment.Center;
+            roleText.characterSize = 0.2f;
+            roleText.fontSize = 36;
+            roleText.color = new Color(0.12f, 0.22f, 0.28f);
+            return company;
         }
 
         private static JourneyContentCatalog EnsureContentCatalog()
@@ -361,7 +470,7 @@ namespace InteractiveCareerJourneyEditor
             return item;
         }
 
-        private static void CreateCamera(Transform target)
+        private static JourneyCameraFollow CreateCamera(Transform target)
         {
             GameObject cameraObject = new GameObject("Journey Camera");
             cameraObject.tag = "MainCamera";
@@ -378,6 +487,7 @@ namespace InteractiveCareerJourneyEditor
             SerializedObject serializedFollow = new SerializedObject(follow);
             serializedFollow.FindProperty("target").objectReferenceValue = target;
             serializedFollow.ApplyModifiedPropertiesWithoutUndo();
+            return follow;
         }
 
         private static void CreateHud(CharacterJourneyMotor motor, JourneyDialogueSequence dialogueSequence)

@@ -20,6 +20,7 @@ namespace InteractiveCareerJourney
         [SerializeField] private CharacterJourneyMotor alfio;
         [SerializeField] private GameObject mentor;
         [SerializeField] private JourneyContentCatalog contentCatalog;
+        [SerializeField] private ParallelStudyWorkSequence parallelSequence;
         [SerializeField] private float highSchoolStopX = 23f;
         [SerializeField] private float universityStopX = 47f;
 
@@ -52,7 +53,11 @@ namespace InteractiveCareerJourney
             else if (state == SequenceState.TimeJump && Time.time >= timeJumpEndsAt)
                 state = SequenceState.Reflection;
             else if (state == SequenceState.WalkingToUniversity && !alfio.IsWalking && !alfio.IsPaused)
+            {
                 state = SequenceState.AtUniversity;
+                if (parallelSequence != null)
+                    parallelSequence.BeginSequence();
+            }
         }
 
         private void OnGUI()
@@ -106,6 +111,8 @@ namespace InteractiveCareerJourney
 
         public void RestartSequence()
         {
+            if (parallelSequence != null)
+                parallelSequence.ResetSequence();
             alfio.RestartJourney();
             if (mentor != null)
                 mentor.SetActive(false);

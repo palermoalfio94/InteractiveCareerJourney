@@ -13,16 +13,31 @@ namespace InteractiveCareerJourney
 
         private float startAtX;
         private float firstStopAtX;
+        private Vector3 stopAtPosition;
+        private bool hasExplicitPositionMilestone;
         private bool isPaused;
         private bool isWalking;
 
         public bool IsPaused => isPaused;
         public bool IsWalking => isWalking && !isPaused;
-        public bool HasReachedMilestone => transform.position.x >= stopAtX - 0.01f;
+        public bool HasReachedMilestone =>
+            Mathf.Abs(transform.position.x - stopAtPosition.x) <= 0.01f &&
+            Mathf.Abs(transform.position.z - stopAtPosition.z) <= 0.01f;
 
         public void SetNextMilestone(float positionX)
         {
             stopAtX = positionX;
+            stopAtPosition = new Vector3(positionX, transform.position.y, transform.position.z);
+            hasExplicitPositionMilestone = false;
+            isPaused = false;
+            isWalking = !HasReachedMilestone;
+        }
+
+        public void SetNextMilestone(Vector3 worldPosition)
+        {
+            stopAtPosition = new Vector3(worldPosition.x, transform.position.y, worldPosition.z);
+            stopAtX = worldPosition.x;
+            hasExplicitPositionMilestone = true;
             isPaused = false;
             isWalking = !HasReachedMilestone;
         }
@@ -31,6 +46,8 @@ namespace InteractiveCareerJourney
         {
             startAtX = transform.position.x;
             firstStopAtX = stopAtX;
+            if (!hasExplicitPositionMilestone)
+                stopAtPosition = new Vector3(stopAtX, transform.position.y, transform.position.z);
             isWalking = true;
         }
 
@@ -42,11 +59,12 @@ namespace InteractiveCareerJourney
                 return;
             }
 
-            Vector3 position = transform.position;
-            position.x = Mathf.MoveTowards(position.x, stopAtX, walkingSpeed * Time.deltaTime);
+            Vector3 position = Vector3.MoveTowards(transform.position, stopAtPosition, walkingSpeed * Time.deltaTime);
             transform.position = position;
 
-            if (Mathf.Approximately(position.x, stopAtX))
+            Vector3 remaining = stopAtPosition - position;
+            remaining.y = 0f;
+            if (remaining.sqrMagnitude <= 0.0001f)
             {
                 isWalking = false;
                 ResetGait();
@@ -74,6 +92,8 @@ namespace InteractiveCareerJourney
             position.x = startAtX;
             transform.position = position;
             stopAtX = firstStopAtX;
+            stopAtPosition = new Vector3(firstStopAtX, transform.position.y, transform.position.z);
+            hasExplicitPositionMilestone = false;
             isPaused = false;
             isWalking = true;
         }

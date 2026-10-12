@@ -17,6 +17,18 @@ namespace InteractiveCareerJourney
         [Min(0.1f)] public float yearsLaterDuration = 3f;
         [TextArea(4, 8)] public string highSchoolReflection = "WOW! I really enjoyed Computer Science! Now I can program in C++, C and C#, and I also know how to design and implement a database! I also have the basics of systems and networking! This is fantastic!";
 
+        [Header("University and work in parallel")]
+        public string workCompany = "eyePlus Tecnowork";
+        public string workRole = "GAME PROGRAMMER";
+        public string workTools = "Unity  •  Blender";
+        public string studyBubble = "STUDYING";
+        public string oneYearLaterCaption = "ONE YEAR LATER";
+        [Min(0.1f)] public float workStoryDuration = 10f;
+        [Min(0.1f)] public float oneYearCaptionDuration = 1.8f;
+        [Min(0.1f)] public float workCloneExitDuration = 0.7f;
+        public string graduationResult = "GRADUATED  •  110/110";
+        public string graduationThesis = "Thesis: Semantic Segmentation with Deep Learning";
+
         [Header("University")]
         public string universityTitle = "UNICT Informatica Triennale";
         [TextArea(1, 3)] public string mockContentNotice = "SAMPLE CONTENT — Replace these demo subjects and projects with your own.";

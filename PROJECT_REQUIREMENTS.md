@@ -41,8 +41,8 @@ Controlli minimi: pausa/ripresa, esplorazione/salto e audio attivo/disattivo. La
 3. Prime competenze: C++, PHP, HTML, CSS e basi di database.
 4. Primi progetti di programmazione.
 5. Studi universitari in Informatica e progetti/corsi.
-6. Inizio del lavoro durante gli studi, sviluppo software e game development.
-7. Laurea triennale e crescita professionale; successivo cambio di azienda.
+6. Durante gli studi, un ramo parallelo mostra il lavoro da Game Programmer presso eyePlus Tecnowork con Unity e Blender; dopo un anno questa esperienza si chiude.
+7. Alfio resta all'università e si laurea con 110/110 e una tesi sulla segmentazione semantica con Deep Learning; seguono crescita professionale e successivo cambio di azienda.
 8. Pausa temporanea degli studi e attività di insegnamento.
 9. Ritorno all’università per la laurea magistrale in Informatica.
 10. Machine learning, deep learning, computer vision e progetti di AI.
